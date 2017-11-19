@@ -6,9 +6,9 @@
  * user guide available at https://docs.gradle.org/4.3.1/userguide/tutorial_java_projects.html
  */
 
-
 plugins {
   id "com.jfrog.artifactory" version "4.5.4"
+  id "org.owasp.dependencycheck" version "3.0.2"
 }
 
 // Apply the java plugin to add support for Java
@@ -20,10 +20,15 @@ apply plugin: 'application'
 // Apply the maven-publish plugin to publish artifacts to a Maven Repository
 apply plugin: 'maven-publish'
 
-
 // Apply the Artifactory plugin
 apply plugin: "com.jfrog.artifactory"
 
+// Apply the OWASP DependencyCheck plugin
+// OWASP dependency-check is a utility that detects publicly disclosed vulnerabilities in application dependencies
+// apply plugin: 'org.owasp.dependencycheck.gradle.DependencyCheck'
+apply plugin: 'org.owasp.dependencycheck'
+
+// Add build label
 version = '1.0.0-SNAPSHOT'
 group = 'com.test'
 
@@ -51,6 +56,9 @@ dependencies {
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
+
+    // Use OWASP DependencyChecker to analyze build components for vulnerabilities
+    // classpath 'org.owasp:dependency-check-gradle:3.0.2'
 }
 
 artifactory {
