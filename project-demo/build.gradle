@@ -28,6 +28,11 @@ apply plugin: "com.jfrog.artifactory"
 // apply plugin: 'org.owasp.dependencycheck.gradle.DependencyCheck'
 apply plugin: 'org.owasp.dependencycheck'
 
+//Apply the dependency check plugin to all projects (including the root project)
+allprojects {
+    apply plugin: 'org.owasp.dependencycheck'
+}
+
 // Add build label
 version = '1.0.0-SNAPSHOT'
 group = 'com.test'
@@ -53,6 +58,9 @@ dependencies {
 
     // This dependency is found on compile classpath of this component and consumers.
     compile 'com.google.guava:guava:23.0'
+    
+    // Add the Artifactory Java Client to build
+    compile 'org.jfrog.artifactory.client:artifactory-java-client-services:2.3.5'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
@@ -76,6 +84,7 @@ artifactory {
         }
     }
 }
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -84,6 +93,16 @@ publishing {
     }
 }
 
+// dependencyCheck settings
+dependencyCheck { 
+// Format of the security report output e.g HTML, JSON, XML 
+     format='ALL'
+// fail the build if the CVSS Score exceeds a threshold 0-10
+// failBuildOnCVSS 0
+}
+
+// Adding a dependencyCheck task that will run on all builds to test for vulnerabilities and exposures
+// tasks.check.dependsOn(tasks.dependencyCheck)
 
 // Define the main class for the application
 mainClassName = 'App'
